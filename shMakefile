@@ -1,0 +1,19 @@
+#!/bin/bash
+
+build() {
+  GOOS=linux GOARCH=arm64 go build -o bin/main main.go
+  docker build -t pippo .
+}
+
+run() {  
+  mustVar node
+  mustVar port
+  build
+  
+  docker run -it --rm \
+    --network=gossip\
+    --env NODE="${node}" \
+    -p ${port}:3333 \
+     pippo
+}
+
